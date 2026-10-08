@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------
+# Local-only data pack. The database and the product images are
+# distributed separately and must never be committed.
+# ---------------------------------------------------------------
+data/
+*.db
+*.sqlite
+*.sqlite3
+*.zip
+
+# Catalogue artefacts generated from the data pack by
+# backend/export_catalogue.py — regenerate, do not commit.
+frontend/public/products/
+frontend/src/data/products.json
+
+# ---------------------------------------------------------------
+# Secrets. .env holds the real PORTKEY_API_KEY; only the example
+# with placeholders belongs in the repository.
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------
+# Dependencies and build output
+# ---------------------------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# ---------------------------------------------------------------
+# Editor and OS noise
+# ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

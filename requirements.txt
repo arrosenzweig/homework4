@@ -1,0 +1,12 @@
+# Campus Customs backend.
+# Install from the hw4/ directory:  pip install -r requirements.txt
+
+fastapi>=0.115
+uvicorn[standard]>=0.30
+
+# Pydantic AI agent. The OpenAI extra supplies the client used to reach
+# the Portkey gateway, which speaks the OpenAI chat-completions protocol.
+pydantic-ai-slim[openai]>=2.0
+
+# Loads PORTKEY_API_KEY from the .env file.
+python-dotenv>=1.0

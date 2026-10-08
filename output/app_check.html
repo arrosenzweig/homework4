@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Campus Customs — Full Site Test Report (HW 4, Problem 11)</title>
+<style>
+  :root {
+    --blue: #00356b;
+    --blue-light: #286dc0;
+    --ink: #1a1a1a;
+    --muted: #5c6670;
+    --line: #dfe4ea;
+    --bg: #f7f9fb;
+    --ok: #1d7a46;
+    --ok-bg: #eaf6ef;
+    --warn: #a8620a;
+    --warn-bg: #fdf6ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header.page {
+    background: var(--blue);
+    color: #fff;
+    padding: 2.5rem 1.5rem;
+  }
+  header.page .inner, main, footer.page .inner { max-width: 1000px; margin: 0 auto; }
+  header.page h1 { margin: 0 0 .4rem; font-size: 2rem; letter-spacing: -.02em; }
+  header.page p { margin: .2rem 0; opacity: .9; }
+  header.page .meta { font-size: .88rem; opacity: .75; margin-top: 1rem; }
+
+  main { padding: 2rem 1.5rem 4rem; }
+
+  .summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem; margin: 0 0 2.5rem;
+  }
+  .stat {
+    background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--blue);
+    border-radius: 8px; padding: .9rem 1rem;
+  }
+  .stat .n { font-size: 1.7rem; font-weight: 700; color: var(--blue); line-height: 1.1; }
+  .stat .l { font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+
+  h2.section {
+    font-size: 1.3rem; margin: 3rem 0 1rem; padding-bottom: .5rem;
+    border-bottom: 2px solid var(--blue);
+  }
+  h2.section:first-of-type { margin-top: 0; }
+
+  .test {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    margin-bottom: 2rem; overflow: hidden;
+  }
+  .test > header {
+    padding: 1rem 1.25rem; border-bottom: 1px solid var(--line);
+    display: flex; align-items: flex-start; gap: .9rem; flex-wrap: wrap;
+  }
+  .id {
+    flex: none; background: var(--blue); color: #fff; font-weight: 700;
+    font-size: .8rem; letter-spacing: .04em; padding: .3rem .6rem; border-radius: 5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .test h3 { margin: 0; font-size: 1.08rem; flex: 1 1 320px; }
+  .pass {
+    flex: none; background: var(--ok-bg); color: var(--ok); border: 1px solid #bfe3cd;
+    font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+    padding: .25rem .6rem; border-radius: 999px;
+  }
+  .required {
+    flex: none; background: #fff3cd; color: #8a6100; border: 1px solid #f0dca8;
+    font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    padding: .25rem .6rem; border-radius: 999px;
+  }
+  .body { padding: 1.25rem; }
+  .body p { margin: 0 0 .9rem; }
+  .body p:last-child { margin-bottom: 0; }
+
+  figure { margin: 0 0 1.1rem; }
+  figure img {
+    width: 100%; display: block; border: 1px solid var(--line); border-radius: 6px;
+    background: #fff;
+  }
+  figcaption {
+    font-size: .85rem; color: var(--muted); margin-top: .5rem; padding-left: .2rem;
+    border-left: 3px solid var(--line); padding: .2rem 0 .2rem .7rem;
+  }
+  figcaption b { color: var(--ink); }
+
+  dl.checks { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1rem; font-size: .92rem; }
+  dl.checks dt { color: var(--muted); }
+  dl.checks dd { margin: 0; }
+
+  table { border-collapse: collapse; width: 100%; font-size: .9rem; margin: .5rem 0 0; }
+  th, td { border: 1px solid var(--line); padding: .45rem .6rem; text-align: left; }
+  th { background: var(--bg); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  td.num { text-align: right; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .good { color: var(--ok); font-weight: 600; }
+  .bad { color: #9b1c1c; font-weight: 600; }
+
+  code {
+    background: #eef2f6; padding: .1rem .35rem; border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em;
+  }
+  .note {
+    background: var(--warn-bg); border: 1px solid #f0dca8; border-left: 4px solid var(--warn);
+    border-radius: 6px; padding: .8rem 1rem; font-size: .92rem; margin: 1rem 0 0;
+  }
+  .note b { color: var(--warn); }
+
+  footer.page { background: #fff; border-top: 1px solid var(--line); padding: 2rem 1.5rem; font-size: .88rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="page">
+  <div class="inner">
+    <h1>Full Site Test Report</h1>
+    <p>Yale Bulldog Blue by Campus Customs — AI Foundations HW 4, Problem 11</p>
+    <p class="meta">
+      Tested 7 October 2026 · Frontend <code>localhost:5173</code> (React + Vite + TypeScript) ·
+      Backend <code>localhost:8000</code> (FastAPI + Pydantic AI) · Database
+      <code>data/campus_customs.db</code>
+    </p>
+  </div>
+</header>
+
+<main>
+
+  <section class="summary">
+    <div class="stat"><div class="n">14</div><div class="l">Tests run</div></div>
+    <div class="stat"><div class="n">14</div><div class="l">Passed</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">Failed</div></div>
+    <div class="stat"><div class="n">12</div><div class="l">Screenshots</div></div>
+  </section>
+
+  <p>
+    Every page, the chat assistant, the account flow and all four Problem&nbsp;9 usability
+    improvements were exercised in a real browser against the running app. Numbers the
+    assistant or the page reported were then checked directly against the SQLite database —
+    a screenshot alone cannot prove a stock count is correct, so each one is paired with a
+    query against the source data.
+  </p>
+
+  <!-- ================= REQUIRED SCREENSHOTS ================= -->
+  <h2 class="section">Part 1 — Required screenshots</h2>
+
+  <article class="test">
+    <header>
+      <span class="id">T-01</span>
+      <h3>Chat checks the inventory level of an item</h3>
+      <span class="required">Required</span>
+      <span class="pass">Pass</span>
+    </header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/04-chat-inventory.jpg"
+             alt="Chat panel open over the Yale Dad Hoodie product page. The shopper asked how many are left in large; the assistant replied that 20 are left, with a product card below showing the hoodie at $68.00." />
+        <figcaption>
+          <b>Screenshot 04 — chat inventory lookup.</b> On the Yale Dad Hoodie page, the
+          shopper asks <i>“How many Yale Dad Hoodies are left in large?”</i> The assistant
+          calls its <code>stock_for_product</code> tool and answers
+          <b>“We have 20 Yale Dad Hoodies left in large.”</b> A product card with the real
+          photo, price and in-stock sizes appears beneath the reply. The amber strip confirms
+          this is a guest session, so nothing is being saved.
+        </figcaption>
+      </figure>
+
+      <p><b>What this proves:</b> the assistant reads live inventory rather than guessing.</p>
+
+      <dl class="checks">
+        <dt>Asked</dt><dd>How many Yale Dad Hoodies are left in large?</dd>
+        <dt>Answered</dt><dd>20 left in large</dd>
+        <dt>Database</dt><dd><code>yale-dad-hoodie</code> → <code>stock['L'] = 20</code></dd>
+        <dt>Result</dt><dd class="good">Exact match</dd>
+      </dl>
+    </div>
+  </article>
+
+  <article class="test">
+    <header>
+      <span class="id">T-02</span>
+      <h3>Dynamic search-result cards rendered on the site</h3>
+      <span class="required">Required</span>
+      <span class="pass">Pass</span>
+    </header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/05-dynamic-search-cards.jpg"
+             alt="Products page showing a highlighted band headed 'From your conversation — Matches for Show me fleece jackets', containing six product cards with photos, names, category labels, truncated descriptions and $98.00 prices." />
+        <figcaption>
+          <b>Screenshot 05 — dynamic product cards on the page.</b> After asking
+          <i>“Show me fleece jackets”</i> in the chat, the matches are published to the
+          page itself as a <b>“From your conversation”</b> band above the catalogue grid,
+          headed <b>Matches for “Show me fleece jackets”</b>. Each card carries the product
+          photo, name, category, a short description and the real price. These render through
+          the same <code>&lt;ProductCard&gt;</code> component as the catalogue, so they behave
+          identically — including opening the single-item detail page when clicked.
+        </figcaption>
+      </figure>
+
+      <p>
+        <b>What this proves:</b> the agent returns structured product matches (ids only), the
+        server hydrates them from SQLite, and the front end renders them in the site layout —
+        not merely inside the chat bubble.
+      </p>
+
+      <dl class="checks">
+        <dt>Asked</dt><dd>Show me fleece jackets</dd>
+        <dt>Cards shown</dt><dd>6, all genuine fleece jackets, all $98.00</dd>
+        <dt>Click-through</dt><dd>verified separately in T-03 — opens the detail view</dd>
+        <dt>Result</dt><dd class="good">Pass</dd>
+      </dl>
+    </div>
+  </article>
+
+  <article class="test">
+    <header>
+      <span class="id">T-03</span>
+      <h3>Usability feature from Problem 9 — sort and filter (F1)</h3>
+      <span class="required">Required</span>
+      <span class="pass">Pass</span>
+    </header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/06-usability-filters.jpg"
+             alt="Products page filter row showing Sort set to 'Price: low to high', College or school set to 'All of Yale', Size set to XL, a Max Price slider at $60, an 'In stock only' checkbox ticked and a Reset button. Below, the result count reads 41 products available in XL under $61." />
+        <figcaption>
+          <b>Screenshot 06 — Problem 9 improvement F1, sort and filter.</b> The products page
+          with four filters applied at once: sorted <b>Price: low to high</b>, limited to size
+          <b>XL</b>, capped at <b>$60</b>, and <b>In stock only</b> ticked. The live count
+          states the filters in words — <b>“41 products available in XL under $61”</b> — and a
+          <b>Reset</b> button appears because filters are active. All state lives in the URL,
+          so the view is shareable and the assistant can read exactly what the shopper sees.
+        </figcaption>
+      </figure>
+
+      <p>
+        <b>What this proves:</b> before this change the only tools for narrowing 102 products
+        were a category row and a text box. The filter result was verified against the data
+        rather than taken from the screen.
+      </p>
+
+      <table>
+        <tr><th>Check</th><th>Page reported</th><th>Database</th><th>Result</th></tr>
+        <tr>
+          <td>XL in stock, ≤ $60, in stock</td>
+          <td class="num">41</td><td class="num">41</td>
+          <td class="good">Match</td>
+        </tr>
+        <tr>
+          <td>Sort order (first card)</td>
+          <td class="num">$32.00</td><td class="num">$32.00 = catalogue minimum</td>
+          <td class="good">Match</td>
+        </tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- ================= PAGES ================= -->
+  <h2 class="section">Part 2 — Every page</h2>
+
+  <article class="test">
+    <header><span class="id">T-04</span><h3>Home page</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/01-home.jpg"
+             alt="Home page with navy navigation bar, the headline 'Shop Bulldog Blue', the tagline 'Casual comfort, classic Bulldog pride', two call-to-action buttons, a three-column information strip, a chat launcher and a blue athletics ticker along the bottom." />
+        <figcaption>
+          <b>Screenshot 01 — home page.</b> Navigation bar links to Home, Products, About Us,
+          Log In and Create Account. Brand copy is the shop's own wording from
+          yalebulldogblue.com: <i>“Shop Bulldog Blue”</i>, <i>“Casual comfort, classic Bulldog
+          pride.”</i>, <i>“Officially Licensed Merchandise”</i> and the 57 Broadway address.
+          The <b>athletics ticker</b> (Problem 10) runs along the bottom and the
+          <b>Chat with us</b> launcher sits above it.
+        </figcaption>
+      </figure>
+      <dl class="checks">
+        <dt>Product count</dt><dd>“Shop all 102 products” — matches the catalogue</dd>
+        <dt>Ticker</dt><dd>shows upcoming Fall 2026 home fixtures only</dd>
+        <dt>Result</dt><dd class="good">Pass</dd>
+      </dl>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-05</span><h3>Products page — full catalogue</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/02-products-grid.jpg"
+             alt="Products page showing category chips, a search box, the filter row and a three-column grid of product cards with photographs." />
+        <figcaption>
+          <b>Screenshot 02 — product grid.</b> All <b>102 products</b> with photographs,
+          names, category labels, short descriptions and prices. Category chips show the six
+          normalized garment categories, which were derived from a <code>garment_type</code>
+          column holding 22 inconsistent labels.
+        </figcaption>
+      </figure>
+      <dl class="checks">
+        <dt>Products rendered</dt><dd>102 — matches <code>catalogue</code> row count</dd>
+        <dt>Images</dt><dd>all load; none broken</dd>
+        <dt>Result</dt><dd class="good">Pass</dd>
+      </dl>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-06</span><h3>Single-item detail page</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/03-product-detail.jpg"
+             alt="Yale Dad Hoodie detail page: large product photo on the left, and on the right the garment type, name, $68.00 price, description, colour chips, six size buttons and the start of a stock-by-size table." />
+        <figcaption>
+          <b>Screenshot 03 — single-item page.</b> The layout required in Problem 3: large
+          image on one side, full product text on the other — garment type, name, price,
+          description, colours, six size buttons and a stock-by-size table. Breadcrumbs run
+          Products → Hoodies → Yale Dad Hoodie.
+        </figcaption>
+      </figure>
+      <dl class="checks">
+        <dt>Price shown</dt><dd>$68.00 — matches <code>catalogue.price</code></dd>
+        <dt>Stock table</dt><dd>reads real per-size quantities from <code>inventory</code></dd>
+        <dt>Reached from</dt><dd>catalogue card <i>and</i> chat-placed card — both work</dd>
+        <dt>Result</dt><dd class="good">Pass</dd>
+      </dl>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-07</span><h3>About Us page</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/11-about.jpg"
+             alt="About Us page headed 'Come visit us!' with the Campus Customs history, three fact cards reading Since 1975, Find us 57 Broadway New Haven CT 06511, and Licensing Yale Official Licensed." />
+        <figcaption>
+          <b>Screenshot 11 — About Us.</b> The shop's real story in its own words: family-run
+          since 1975, screen printing and embroidery, co-owners Joel and Jeremy Cobden, and
+          the 57 Broadway address. Fact cards summarise the founding year, location and
+          licensing. A source note at the foot of the page credits yalebulldogblue.com.
+        </figcaption>
+      </figure>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-08</span><h3>Log In page</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/08-login.jpg"
+             alt="Log in page with email and password fields, a Log in button, a link to create an account, and a dashed box listing the test account credentials." />
+        <figcaption>
+          <b>Screenshot 08 — log in.</b> Email and password only, as specified. The test
+          account is shown in a dashed box for grading convenience
+          (<code>test@campuscustoms.yale.edu</code> / <code>password</code>).
+        </figcaption>
+      </figure>
+      <table>
+        <tr><th>Case</th><th>Expected</th><th>Actual</th><th>Result</th></tr>
+        <tr><td>Correct credentials</td><td>200 + session token</td><td>200</td><td class="good">Pass</td></tr>
+        <tr><td>Wrong password</td><td>401, generic message</td><td>401 “Incorrect email or password.”</td><td class="good">Pass</td></tr>
+        <tr><td>Unknown email</td><td>identical message</td><td>same 401 text</td><td class="good">Pass</td></tr>
+      </table>
+      <p class="note">
+        <b>Why identical messages matter:</b> saying “no account with that email” would turn
+        the login form into a tool for discovering which addresses are registered.
+      </p>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-09</span><h3>Create Account page</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/10-create-account.jpg"
+             alt="Create an account page with First name, Last name, Email, Password and Confirm password fields and a Create account button." />
+        <figcaption>
+          <b>Screenshot 10 — create account.</b> All five required fields: first name, last
+          name, email, password and password confirmation. Validation is enforced server-side
+          as well as in the browser, so the rules hold even if the form is bypassed.
+        </figcaption>
+      </figure>
+      <table>
+        <tr><th>Case</th><th>Expected</th><th>Actual</th><th>Result</th></tr>
+        <tr><td>Valid signup</td><td>201, row written</td><td>201</td><td class="good">Pass</td></tr>
+        <tr><td>Passwords differ</td><td>400</td><td>400 “Passwords do not match.”</td><td class="good">Pass</td></tr>
+        <tr><td>Password under 8 chars</td><td>400</td><td>400</td><td class="good">Pass</td></tr>
+        <tr><td>Email already registered</td><td>409</td><td>409</td><td class="good">Pass</td></tr>
+      </table>
+      <p>
+        Passwords are stored as PBKDF2-HMAC-SHA256 with a per-user random salt and 600,000
+        iterations. Inspecting the <code>users</code> table directly confirmed no plaintext
+        password appears in any row.
+      </p>
+    </div>
+  </article>
+
+  <!-- ================= FEATURES ================= -->
+  <h2 class="section">Part 3 — Feature checks</h2>
+
+  <article class="test">
+    <header><span class="id">T-10</span><h3>Saved chat history restores on log in</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/09-signed-in-history.jpg"
+             alt="Home page with the chat panel open. The panel header reads 'Saved to your account, Test'. The transcript shows a restored earlier conversation including a Yale Dad Hoodie product card. The navigation bar reads 'Hi, Test' and 'Log Out'." />
+        <figcaption>
+          <b>Screenshot 09 — signed-in session with restored history.</b> After logging in as
+          the test account, the navigation shows <b>“Hi, Test”</b> and the chat header reads
+          <b>“Saved to your account, Test”</b>. The earlier conversation has been reloaded
+          from the <code>chat_messages</code> table, product cards included. The guest notice
+          is gone.
+        </figcaption>
+      </figure>
+      <table>
+        <tr><th>Case</th><th>Expected</th><th>Actual</th><th>Result</th></tr>
+        <tr><td>Guest sends a message</td><td>nothing written</td><td>row count unchanged at 22</td><td class="good">Pass</td></tr>
+        <tr><td>Guest sees a notice</td><td>“not saved”</td><td>shown, with a log-in link</td><td class="good">Pass</td></tr>
+        <tr><td>Signed-in turn</td><td>both turns written</td><td>2 rows, <code>user_id = 1</code></td><td class="good">Pass</td></tr>
+        <tr><td>Log out</td><td>panel resets</td><td>back to greeting only</td><td class="good">Pass</td></tr>
+        <tr><td>Log back in</td><td>thread restored</td><td>11 messages + cards</td><td class="good">Pass</td></tr>
+      </table>
+      <p>
+        Restored cards are rebuilt from the live catalogue by id rather than replayed from the
+        stored snapshot, so an old conversation always shows today's prices and stock.
+      </p>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-11</span><h3>Agent reports out of stock honestly, and declines off-topic requests</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/12-outofstock-and-refusal.jpg"
+             alt="Chat panel showing the assistant reply: 'No—the Baseball Left Chest Crewneck is out of stock in XL. It is available in S, M, L, and XXL. I can help you find Yale apparel, but I can't write Python scripts.' A product card for the crewneck at $58.00 is below it." />
+        <figcaption>
+          <b>Screenshot 12 — out-of-stock answer and off-topic refusal.</b> A deliberately
+          awkward message combining a stock question about an item that is genuinely gone in
+          XL with an unrelated coding request. The assistant answers
+          <b>“No — the Baseball Left Chest Crewneck is out of stock in XL. It is available in
+          S, M, L, and XXL”</b> and declines the coding request in one short sentence without
+          lecturing.
+        </figcaption>
+      </figure>
+      <table>
+        <tr><th>Claim</th><th>Database</th><th>Result</th></tr>
+        <tr><td>Out of stock in XL</td><td><code>XL = 0</code></td><td class="good">Match</td></tr>
+        <tr><td>Available in S, M, L, XXL</td><td><code>S=15, M=5, L=25, XXL=25</code></td><td class="good">Match</td></tr>
+        <tr><td>XS not offered</td><td><code>XS = 0</code> — correctly omitted</td><td class="good">Match</td></tr>
+      </table>
+      <p class="note">
+        <b>This test exists because of a real bug.</b> An earlier version filtered search
+        results by size <i>before</i> ranking them, which removed the asked-about product from
+        the results and left the assistant answering <i>“Yes, available in XL”</i> using a
+        different crewneck. Relevance now sorts first and the size filter annotates rather
+        than removes, so the honest “no” reaches the top.
+      </p>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-12</span><h3>Collections — residential colleges and graduate schools</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <figure>
+        <img src="app_check_images/07-collection-saybrook.jpg"
+             alt="Products page with the College or school dropdown set to Saybrook College. The count reads 3 products for Saybrook College and three Saybrook items are shown: a navy crewneck, a grey crest tee and a grey fleece jacket." />
+        <figcaption>
+          <b>Screenshot 07 — collection filter.</b> The <b>College or school</b> dropdown set
+          to <b>Saybrook College</b>, returning <b>“3 products for Saybrook College”</b>. The
+          dropdown groups its options under <i>Residential Colleges</i> and
+          <i>Graduate &amp; Professional Schools</i>.
+        </figcaption>
+      </figure>
+      <table>
+        <tr><th>Check</th><th>Value</th><th>Result</th></tr>
+        <tr><td>Collections classified</td><td>22 (11 colleges, 11 schools) from 32 products</td><td class="good">Pass</td></tr>
+        <tr><td>Saybrook College</td><td>3 products — matches database</td><td class="good">Pass</td></tr>
+        <tr><td>Agent: “anything for the School of Nursing?”</td><td>returns the crest tee</td><td class="good">Pass</td></tr>
+        <tr><td>Agent: “do you have Silliman gear?”</td><td>“We don't currently carry Silliman College gear”</td><td class="good">Pass</td></tr>
+      </table>
+      <p>
+        The Silliman case is the important one: no substitute college was offered in place of
+        a collection the shop does not stock.
+      </p>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-13</span><h3>Problem 9 improvement B1 — search quality</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <p>
+        Search previously matched raw substrings, so British spellings, typos and everyday
+        synonyms returned nothing, while a one-letter term matched the entire catalogue.
+        Measured against the live database before and after:
+      </p>
+      <table>
+        <tr><th>Query</th><th>Matches before</th><th>Matches now</th><th>Result</th></tr>
+        <tr><td><code>grey</code></td><td class="num bad">0</td><td class="num good">50</td><td class="good">Fixed</td></tr>
+        <tr><td><code>hoodei</code> (typo)</td><td class="num bad">0</td><td class="num good">27</td><td class="good">Fixed</td></tr>
+        <tr><td><code>jumper</code></td><td class="num bad">0</td><td class="num good">6</td><td class="good">Fixed</td></tr>
+        <tr><td><code>t shirt</code></td><td class="num bad">102 (everything)</td><td class="num good">25</td><td class="good">Fixed</td></tr>
+        <tr><td><code>hoodie</code></td><td class="num">27</td><td class="num">27</td><td class="good">No regression</td></tr>
+        <tr><td><code>gray</code></td><td class="num">50</td><td class="num">50</td><td class="good">No regression</td></tr>
+      </table>
+      <p>
+        End to end, asking the assistant <i>“do you have anything in grey?”</i> now returns six
+        product cards. It previously returned nothing from a shop holding fifty grey items.
+      </p>
+    </div>
+  </article>
+
+  <article class="test">
+    <header><span class="id">T-14</span><h3>Problem 9 improvements B2 and F2 — limits and accessibility</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <p><b>B2 — bounded wait and turn budget:</b></p>
+      <table>
+        <tr><th>Case</th><th>Expected</th><th>Actual</th><th>Result</th></tr>
+        <tr><td>26 rapid chat requests (limit 25)</td><td>429 with a wait time</td><td>429 “…Give it about 278 seconds and try again.”</td><td class="good">Pass</td></tr>
+        <tr><td>Agent call exceeds 45s</td><td>504, clear message</td><td>handler verified; not triggered naturally</td><td class="good">Pass</td></tr>
+      </table>
+
+      <p style="margin-top:1.2rem"><b>F2 — accessible chat panel:</b></p>
+      <table>
+        <tr><th>Check</th><th>Result</th></tr>
+        <tr><td>Panel role and label</td><td class="good"><code>role="dialog"</code>, “Shopping assistant”</td></tr>
+        <tr><td>Transcript role</td><td class="good"><code>role="log"</code></td></tr>
+        <tr><td>Reply announcement</td><td class="good"><code>aria-live="polite"</code>, <code>aria-atomic="true"</code></td></tr>
+        <tr><td>Focus on open</td><td class="good">moves to the message input</td></tr>
+        <tr><td>Escape key</td><td class="good">closes panel, focus returns to the launcher</td></tr>
+        <tr><td>Clear conversation</td><td class="good">resets thread, announces “Conversation cleared.”</td></tr>
+      </table>
+      <p>
+        The <b>Clear</b> button is visible in screenshots 04 and 12, in the chat panel header.
+      </p>
+    </div>
+  </article>
+
+  <!-- ================= API ================= -->
+  <h2 class="section">Part 4 — Backend endpoints</h2>
+
+  <article class="test">
+    <header><span class="id">T-15</span><h3>API responses</h3><span class="pass">Pass</span></header>
+    <div class="body">
+      <p>
+        Backend started exactly as specified — <code>uvicorn main:app --reload --port 8000</code>
+        run from the <code>backend/</code> directory.
+      </p>
+      <table>
+        <tr><th>Endpoint</th><th>Purpose</th><th>Status</th></tr>
+        <tr><td><code>GET /api/health</code></td><td>service + catalogue status</td><td class="good">200</td></tr>
+        <tr><td><code>GET /api/products</code></td><td>102 products</td><td class="good">200</td></tr>
+        <tr><td><code>GET /api/categories</code></td><td>six garment categories</td><td class="good">200</td></tr>
+        <tr><td><code>GET /api/collections</code></td><td>22 colleges and schools</td><td class="good">200</td></tr>
+        <tr><td><code>GET /products/yale-dad-hoodie.jpg</code></td><td>product image</td><td class="good">200</td></tr>
+        <tr><td><code>POST /api/chat</code></td><td>one agent turn</td><td class="good">200</td></tr>
+        <tr><td><code>GET /api/chat/info</code></td><td>prompt file and model in use</td><td class="good">200</td></tr>
+        <tr><td><code>GET /api/chat/history</code></td><td>saved conversation</td><td class="good">200</td></tr>
+        <tr><td><code>POST /api/auth/login</code> (valid)</td><td>session token</td><td class="good">200</td></tr>
+        <tr><td><code>POST /api/auth/login</code> (bad password)</td><td>rejected</td><td class="good">401</td></tr>
+        <tr><td><code>GET /api/auth/me</code> (no token)</td><td>rejected</td><td class="good">401</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- ================= LIMITATIONS ================= -->
+  <h2 class="section">Known limitations</h2>
+
+  <article class="test">
+    <header><span class="id">NOTE</span><h3>Things this test run could not cover, stated plainly</h3></header>
+    <div class="body">
+      <ul>
+        <li>
+          <b>No product is sold out in every size.</b> 145 of 612 size rows are zero, but
+          every product has stock somewhere, so the fully sold-out path and the
+          <code>sold_out</code> badge are written but could not be exercised with real data.
+        </li>
+        <li>
+          <b>The products-page search box does not use the B1 normalization.</b> That
+          improvement lives in the backend; the grid filters client-side against the bundled
+          snapshot. Typing “grey” in the chat finds 50 products; typing it in the grid search
+          still finds 0.
+        </li>
+        <li>
+          <b>The rate limiter holds state in process memory.</b> Correct for one worker,
+          wrong for a multi-process deployment where each worker would keep its own counter.
+        </li>
+        <li>
+          <b>Sessions never expire</b> and the token is kept in <code>localStorage</code>
+          rather than an <code>HttpOnly</code> cookie. Both are noted in the harness document.
+        </li>
+        <li>
+          <b>The 45-second agent timeout was not triggered naturally</b> — observed turns ran
+          2–20 seconds. The handler is in place and the error path was reviewed, but no real
+          timeout occurred during this run.
+        </li>
+      </ul>
+    </div>
+  </article>
+
+</main>
+
+<footer class="page">
+  <div class="inner">
+    Campus Customs test report — AI Foundations HW 4, Problem 11. Screenshots captured from
+    the running application on 7 October 2026 and stored in
+    <code>output/app_check_images/</code>. All inventory and price figures were verified
+    against <code>data/campus_customs.db</code> rather than read from the screen.
+  </div>
+</footer>
+
+</body>
+</html>
